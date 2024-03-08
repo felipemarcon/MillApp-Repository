@@ -41,23 +41,6 @@ class _PessoaListWidgetState extends State<PessoaListWidget> {
           FFAppState().apiRequest = RequestAPIStruct.maybeFromMap(
               (_model.sqlPessoas?.jsonBody ?? ''))!;
         });
-        await SQLiteManager.instance.opsDelete();
-        await SQLiteManager.instance.insertPessoa(
-          nome: '3232',
-          nomefantasia: '3',
-          email: '3',
-          dtcadastro: '323',
-          logradouro: 'ewew',
-          numero: '2',
-          complemento: 'eqweqw',
-          bairro: '3232',
-          cep: '3232',
-          tipopessoa: '1',
-          documento: '2',
-          dtsinc: '3',
-          bloqueiacredito: '1',
-          bloqueiadias: '1',
-        );
       }
     });
 
