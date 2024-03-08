@@ -110,7 +110,7 @@ class _HomePageMobileWidgetState extends State<HomePageMobileWidget> {
                                         alignment:
                                             const AlignmentDirectional(-1.0, 1.0),
                                         child: Text(
-                                          'Atendimento',
+                                          'Atendimento2',
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(
