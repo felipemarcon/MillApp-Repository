@@ -41,6 +41,7 @@ class _PessoaListWidgetState extends State<PessoaListWidget> {
           FFAppState().apiRequest = RequestAPIStruct.maybeFromMap(
               (_model.sqlPessoas?.jsonBody ?? ''))!;
         });
+        await SQLiteManager.instance.opsDelete();
         while (_model.contador! < 5) {
           await SQLiteManager.instance.insertPessoa(
             nome: FFAppState().itensDatatype.first.nome,
@@ -58,6 +59,9 @@ class _PessoaListWidgetState extends State<PessoaListWidget> {
             bloqueiacredito: FFAppState().itensDatatype.first.bloqueiaCredito,
             bloqueiadias: FFAppState().itensDatatype.first.bloqueiaDias,
           );
+          setState(() {
+            _model.contador = _model.contador! + 1;
+          });
         }
       }
     });
