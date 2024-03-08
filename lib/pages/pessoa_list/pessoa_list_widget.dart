@@ -41,7 +41,7 @@ class _PessoaListWidgetState extends State<PessoaListWidget> {
           FFAppState().apiRequest = RequestAPIStruct.maybeFromMap(
               (_model.sqlPessoas?.jsonBody ?? ''))!;
         });
-        while (FFAppState().itensDatatype.isNotEmpty) {
+        while (_model.contador! < 5) {
           await SQLiteManager.instance.insertPessoa(
             nome: FFAppState().itensDatatype.first.nome,
             nomefantasia: FFAppState().itensDatatype.first.nomeFantasia,

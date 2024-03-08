@@ -6,6 +6,10 @@ import 'pessoa_list_widget.dart' show PessoaListWidget;
 import 'package:flutter/material.dart';
 
 class PessoaListModel extends FlutterFlowModel<PessoaListWidget> {
+  ///  Local state fields for this page.
+
+  int? contador;
+
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();

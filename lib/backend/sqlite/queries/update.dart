@@ -44,3 +44,15 @@ INSERT INTO "mill_pessoa" (
 }
 
 /// END INSERTPESSOA
+
+/// BEGIN OPSDELETE
+Future performOpsDelete(
+  Database database,
+) {
+  const query = '''
+Delete from "mill_pessoa";
+''';
+  return database.rawQuery(query);
+}
+
+/// END OPSDELETE

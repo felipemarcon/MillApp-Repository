@@ -71,5 +71,9 @@ class SQLiteManager {
         bloqueiadias: bloqueiadias,
       );
 
+  Future opsDelete() => performOpsDelete(
+        _database,
+      );
+
   /// END UPDATE QUERY CALLS
 }
