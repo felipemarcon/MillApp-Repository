@@ -1,0 +1,52 @@
+BEGIN TRANSACTION;
+CREATE TABLE IF NOT EXISTS "mill_pessoa" (
+	"id"	INTEGER NOT NULL UNIQUE,
+	"nome"	TEXT NOT NULL,
+	"nomefantasia"	TEXT,
+	"email"	TEXT NOT NULL,
+	"dtcadastro"	TEXT,
+	"logradouro"	TEXT,
+	"numero"	TEXT,
+	"complemento"	TEXT,
+	"bairro"	TEXT,
+	"cep"	TEXT,
+	"tipopessoa"	TEXT,
+	"documento"	TEXT,
+	"dtsinc"	TEXT,
+	"bloqueiacredito"	TEXT,
+	"bloqueiadias"	TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "mill_projeto" (
+	"id"	INTEGER NOT NULL,
+	"nome"	TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "mill_classificacao_atendimento" (
+	"id"	INTEGER NOT NULL,
+	"nome"	TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "mill_atendimento" (
+	"id"	INTEGER NOT NULL,
+	"dtatendimento"	TEXT,
+	"contatoid"	TEXT,
+	"colaboradorid"	TEXT,
+	"nomesolicitante"	TEXT,
+	"horainicial"	TEXT,
+	"horafinal"	TEXT,
+	"tempoatendimento"	TEXT,
+	"retrabalho"	TEXT,
+	"projetoid"	TEXT,
+	"classificacaoid"	TEXT,
+	"descricao"	TEXT,
+	"qtekm"	TEXT,
+	"vlcobrancadespesa"	TEXT,
+	"cobrancaadicional"	TEXT,
+	FOREIGN KEY("classificacaoid") REFERENCES "mill_classificacao_atendimento"("id"),
+	FOREIGN KEY("contatoid") REFERENCES "mill_pessoa"("id"),
+	FOREIGN KEY("colaboradorid") REFERENCES "mill_pessoa"("id"),
+	FOREIGN KEY("projetoid") REFERENCES "mill_projeto"("id"),
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+COMMIT;
