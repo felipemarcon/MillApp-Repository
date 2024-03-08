@@ -1,5 +1,5 @@
 import '/backend/api_requests/api_calls.dart';
-import '/backend/sqlite/sqlite_manager.dart';
+import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_data_table.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'pessoa_list_widget.dart' show PessoaListWidget;
@@ -13,10 +13,6 @@ class PessoaListModel extends FlutterFlowModel<PessoaListWidget> {
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
-  // Stores action output result for [Backend Call - API (Autenticacao com JWT)] action in PessoaList widget.
-  ApiCallResponse? sqlJWT;
-  // Stores action output result for [Backend Call - API (Lista Registros SQL)] action in PessoaList widget.
-  ApiCallResponse? sqlPessoas;
   // State field(s) for TextField widget.
   FocusNode? textFieldFocusNode;
   TextEditingController? textController;
@@ -27,7 +23,7 @@ class PessoaListModel extends FlutterFlowModel<PessoaListWidget> {
   ApiCallResponse? apiResultt7s;
   // State field(s) for PaginatedDataTable widget.
   final paginatedDataTableController =
-      FlutterFlowDataTableController<SelectPessoaRow>();
+      FlutterFlowDataTableController<MillPessoaStruct>();
 
   /// Initialization and disposal methods.
 

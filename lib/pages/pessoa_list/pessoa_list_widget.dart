@@ -1,12 +1,10 @@
 import '/backend/api_requests/api_calls.dart';
 import '/backend/schema/structs/index.dart';
-import '/backend/sqlite/sqlite_manager.dart';
 import '/flutter_flow/flutter_flow_data_table.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'pessoa_list_model.dart';
 export 'pessoa_list_model.dart';
@@ -27,22 +25,6 @@ class _PessoaListWidgetState extends State<PessoaListWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => PessoaListModel());
-
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.sqlJWT = await AutenticacaoComJWTCall.call();
-      _model.sqlPessoas = await ListaRegistrosSQLCall.call(
-        authToken: AutenticacaoComJWTCall.codeJWT(
-          (_model.sqlJWT?.jsonBody ?? ''),
-        ),
-      );
-      if ((_model.sqlPessoas?.succeeded ?? true)) {
-        setState(() {
-          FFAppState().apiRequest = RequestAPIStruct.maybeFromMap(
-              (_model.sqlPessoas?.jsonBody ?? ''))!;
-        });
-      }
-    });
 
     _model.textController ??= TextEditingController();
     _model.textFieldFocusNode ??= FocusNode();
@@ -217,213 +199,186 @@ class _PessoaListWidgetState extends State<PessoaListWidget> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-                  child: FutureBuilder<List<SelectPessoaRow>>(
-                    future: SQLiteManager.instance.selectPessoa(),
-                    builder: (context, snapshot) {
-                      // Customize what your widget looks like when it's loading.
-                      if (!snapshot.hasData) {
-                        return Center(
-                          child: SizedBox(
-                            width: 50.0,
-                            height: 50.0,
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                FlutterFlowTheme.of(context).primary,
+                  child: Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    decoration: BoxDecoration(
+                      color: FlutterFlowTheme.of(context).secondaryBackground,
+                    ),
+                    child: Builder(
+                      builder: (context) {
+                        final mostrarDataType =
+                            FFAppState().itensDatatype.toList();
+                        return FlutterFlowDataTable<MillPessoaStruct>(
+                          controller: _model.paginatedDataTableController,
+                          data: mostrarDataType,
+                          columnsBuilder: (onSortChanged) => [
+                            DataColumn2(
+                              label: DefaultTextStyle.merge(
+                                softWrap: true,
+                                child: Text(
+                                  'Informações:',
+                                  style: FlutterFlowTheme.of(context)
+                                      .headlineSmall
+                                      .override(
+                                        fontFamily: 'Outfit',
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                ),
+                              ),
+                              fixedWidth: 200.0,
+                            ),
+                            DataColumn2(
+                              label: DefaultTextStyle.merge(
+                                softWrap: true,
+                                child: Text(
+                                  'Id',
+                                  style: FlutterFlowTheme.of(context)
+                                      .titleLarge
+                                      .override(
+                                        fontFamily: 'Outfit',
+                                        fontSize: 18.0,
+                                      ),
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      }
-                      final containerSelectPessoaRowList = snapshot.data!;
-                      return Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                        ),
-                        child: Builder(
-                          builder: (context) {
-                            final mostrarDataType = containerSelectPessoaRowList
-                                .map((e) => e)
-                                .toList();
-                            return FlutterFlowDataTable<SelectPessoaRow>(
-                              controller: _model.paginatedDataTableController,
-                              data: mostrarDataType,
-                              columnsBuilder: (onSortChanged) => [
-                                DataColumn2(
-                                  label: DefaultTextStyle.merge(
-                                    softWrap: true,
-                                    child: Text(
-                                      'Informações:',
-                                      style: FlutterFlowTheme.of(context)
-                                          .headlineSmall
-                                          .override(
-                                            fontFamily: 'Outfit',
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                    ),
-                                  ),
-                                  fixedWidth: 200.0,
-                                ),
-                                DataColumn2(
-                                  label: DefaultTextStyle.merge(
-                                    softWrap: true,
-                                    child: Text(
-                                      'Id',
-                                      style: FlutterFlowTheme.of(context)
-                                          .titleLarge
-                                          .override(
-                                            fontFamily: 'Outfit',
-                                            fontSize: 18.0,
-                                          ),
-                                    ),
+                            DataColumn2(
+                              label: DefaultTextStyle.merge(
+                                softWrap: true,
+                                child: Opacity(
+                                  opacity: 0.0,
+                                  child: Text(
+                                    '',
+                                    style: FlutterFlowTheme.of(context)
+                                        .titleLarge
+                                        .override(
+                                          fontFamily: 'Outfit',
+                                          fontSize: 18.0,
+                                        ),
                                   ),
                                 ),
-                                DataColumn2(
-                                  label: DefaultTextStyle.merge(
-                                    softWrap: true,
-                                    child: Opacity(
-                                      opacity: 0.0,
-                                      child: Text(
-                                        '',
-                                        style: FlutterFlowTheme.of(context)
-                                            .titleLarge
-                                            .override(
-                                              fontFamily: 'Outfit',
-                                              fontSize: 18.0,
-                                            ),
-                                      ),
+                              ),
+                            ),
+                          ],
+                          dataRowBuilder: (mostrarDataTypeItem,
+                                  mostrarDataTypeIndex,
+                                  selected,
+                                  onSelectChanged) =>
+                              DataRow(
+                            color: MaterialStateProperty.all(
+                              mostrarDataTypeIndex % 2 == 0
+                                  ? FlutterFlowTheme.of(context)
+                                      .secondaryBackground
+                                  : FlutterFlowTheme.of(context)
+                                      .primaryBackground,
+                            ),
+                            cells: [
+                              Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Text(
+                                    valueOrDefault<String>(
+                                      mostrarDataTypeItem.nome,
+                                      'nome',
                                     ),
-                                  ),
-                                ),
-                              ],
-                              dataRowBuilder: (mostrarDataTypeItem,
-                                      mostrarDataTypeIndex,
-                                      selected,
-                                      onSelectChanged) =>
-                                  DataRow(
-                                color: MaterialStateProperty.all(
-                                  mostrarDataTypeIndex % 2 == 0
-                                      ? FlutterFlowTheme.of(context)
-                                          .secondaryBackground
-                                      : FlutterFlowTheme.of(context)
-                                          .primaryBackground,
-                                ),
-                                cells: [
-                                  Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Text(
-                                        valueOrDefault<String>(
-                                          mostrarDataTypeItem.nome,
-                                          'nome',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Readex Pro',
+                                          fontSize: 13.0,
                                         ),
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily: 'Readex Pro',
-                                              fontSize: 13.0,
-                                            ),
-                                      ),
-                                      Text(
-                                        valueOrDefault<String>(
-                                          mostrarDataTypeItem.email,
-                                          'email',
-                                        ),
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily: 'Readex Pro',
-                                              fontSize: 11.0,
-                                            ),
-                                      ),
-                                      Text(
-                                        valueOrDefault<String>(
-                                          mostrarDataTypeItem.documento,
-                                          'documento',
-                                        ),
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily: 'Readex Pro',
-                                              fontSize: 11.0,
-                                            ),
-                                      ),
-                                    ],
                                   ),
                                   Text(
-                                    mostrarDataTypeItem.id.toString(),
-                                    style:
-                                        FlutterFlowTheme.of(context).bodyMedium,
-                                  ),
-                                  Align(
-                                    alignment: const AlignmentDirectional(1.0, 0.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Expanded(
-                                          child: Align(
-                                            alignment:
-                                                const AlignmentDirectional(1.0, 0.0),
-                                            child: InkWell(
-                                              splashColor: Colors.transparent,
-                                              focusColor: Colors.transparent,
-                                              hoverColor: Colors.transparent,
-                                              highlightColor:
-                                                  Colors.transparent,
-                                              onTap: () async {},
-                                              child: Icon(
-                                                Icons.edit_square,
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondaryText,
-                                                size: 24.0,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Align(
-                                            alignment:
-                                                const AlignmentDirectional(1.0, 0.0),
-                                            child: Icon(
-                                              Icons.delete,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryText,
-                                              size: 24.0,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                    valueOrDefault<String>(
+                                      mostrarDataTypeItem.email,
+                                      'email',
                                     ),
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Readex Pro',
+                                          fontSize: 11.0,
+                                        ),
                                   ),
-                                ].map((c) => DataCell(c)).toList(),
+                                  Text(
+                                    valueOrDefault<String>(
+                                      mostrarDataTypeItem.documento,
+                                      'documento',
+                                    ),
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Readex Pro',
+                                          fontSize: 11.0,
+                                        ),
+                                  ),
+                                ],
                               ),
-                              paginated: true,
-                              selectable: false,
-                              hidePaginator: false,
-                              showFirstLastButtons: false,
-                              headingRowHeight: 46.0,
-                              dataRowHeight: 90.0,
-                              columnSpacing: 20.0,
-                              headingRowColor: const Color(0xFFF1F4F8),
-                              borderRadius: BorderRadius.circular(8.0),
-                              addHorizontalDivider: true,
-                              addTopAndBottomDivider: false,
-                              hideDefaultHorizontalDivider: true,
-                              horizontalDividerColor:
-                                  FlutterFlowTheme.of(context)
-                                      .primaryBackground,
-                              horizontalDividerThickness: 1.0,
-                              addVerticalDivider: false,
-                            );
-                          },
-                        ),
-                      );
-                    },
+                              Text(
+                                mostrarDataTypeItem.id.toString(),
+                                style: FlutterFlowTheme.of(context).bodyMedium,
+                              ),
+                              Align(
+                                alignment: const AlignmentDirectional(1.0, 0.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Expanded(
+                                      child: Align(
+                                        alignment:
+                                            const AlignmentDirectional(1.0, 0.0),
+                                        child: InkWell(
+                                          splashColor: Colors.transparent,
+                                          focusColor: Colors.transparent,
+                                          hoverColor: Colors.transparent,
+                                          highlightColor: Colors.transparent,
+                                          onTap: () async {},
+                                          child: Icon(
+                                            Icons.edit_square,
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryText,
+                                            size: 24.0,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Align(
+                                        alignment:
+                                            const AlignmentDirectional(1.0, 0.0),
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryText,
+                                          size: 24.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ].map((c) => DataCell(c)).toList(),
+                          ),
+                          paginated: true,
+                          selectable: false,
+                          hidePaginator: false,
+                          showFirstLastButtons: false,
+                          headingRowHeight: 46.0,
+                          dataRowHeight: 90.0,
+                          columnSpacing: 20.0,
+                          headingRowColor: const Color(0xFFF1F4F8),
+                          borderRadius: BorderRadius.circular(8.0),
+                          addHorizontalDivider: true,
+                          addTopAndBottomDivider: false,
+                          hideDefaultHorizontalDivider: true,
+                          horizontalDividerColor:
+                              FlutterFlowTheme.of(context).primaryBackground,
+                          horizontalDividerThickness: 1.0,
+                          addVerticalDivider: false,
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),

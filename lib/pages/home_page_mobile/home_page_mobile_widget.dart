@@ -1,6 +1,11 @@
+import '/backend/api_requests/api_calls.dart';
+import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'home_page_mobile_model.dart';
 export 'home_page_mobile_model.dart';
 
@@ -33,6 +38,8 @@ class _HomePageMobileWidgetState extends State<HomePageMobileWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () => _model.unfocusNode.canRequestFocus
           ? FocusScope.of(context).requestFocus(_model.unfocusNode)
@@ -264,6 +271,65 @@ class _HomePageMobileWidgetState extends State<HomePageMobileWidget> {
                       ),
                     ),
                   ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Expanded(
+                      child: Align(
+                        alignment: const AlignmentDirectional(0.0, 0.0),
+                        child: Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              0.0, 25.0, 0.0, 0.0),
+                          child: FFButtonWidget(
+                            onPressed: () async {
+                              _model.sqlJWT =
+                                  await AutenticacaoComJWTCall.call();
+                              _model.sqlPessoas =
+                                  await ListaRegistrosSQLCall.call(
+                                authToken: AutenticacaoComJWTCall.codeJWT(
+                                  (_model.sqlJWT?.jsonBody ?? ''),
+                                ),
+                              );
+                              if ((_model.sqlPessoas?.succeeded ?? true)) {
+                                setState(() {
+                                  FFAppState().apiRequest =
+                                      RequestAPIStruct.maybeFromMap(
+                                          (_model.sqlPessoas?.jsonBody ?? ''))!;
+                                });
+                              }
+
+                              setState(() {});
+                            },
+                            text: 'Sincronizar',
+                            icon: const FaIcon(
+                              FontAwesomeIcons.redo,
+                            ),
+                            options: FFButtonOptions(
+                              height: 40.0,
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  24.0, 0.0, 24.0, 0.0),
+                              iconPadding: const EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              color: FlutterFlowTheme.of(context).secondaryText,
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .titleSmall
+                                  .override(
+                                    fontFamily: 'Readex Pro',
+                                    color: Colors.white,
+                                  ),
+                              elevation: 3.0,
+                              borderSide: const BorderSide(
+                                color: Colors.transparent,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
