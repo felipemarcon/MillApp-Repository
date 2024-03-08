@@ -42,27 +42,22 @@ class _PessoaListWidgetState extends State<PessoaListWidget> {
               (_model.sqlPessoas?.jsonBody ?? ''))!;
         });
         await SQLiteManager.instance.opsDelete();
-        while (_model.contador! < 5) {
-          await SQLiteManager.instance.insertPessoa(
-            nome: FFAppState().itensDatatype.first.nome,
-            nomefantasia: FFAppState().itensDatatype.first.nomeFantasia,
-            email: FFAppState().itensDatatype.first.email,
-            dtcadastro: FFAppState().itensDatatype.first.dtcad?.toString(),
-            logradouro: FFAppState().itensDatatype.first.logradouro,
-            numero: FFAppState().itensDatatype.first.numero.toString(),
-            complemento: FFAppState().itensDatatype.first.complemento,
-            bairro: FFAppState().itensDatatype.first.bairro,
-            cep: FFAppState().itensDatatype.first.cep,
-            tipopessoa: FFAppState().itensDatatype.first.tipoPessoa,
-            documento: FFAppState().itensDatatype.first.documento,
-            dtsinc: FFAppState().itensDatatype.first.dtsinc?.toString(),
-            bloqueiacredito: FFAppState().itensDatatype.first.bloqueiaCredito,
-            bloqueiadias: FFAppState().itensDatatype.first.bloqueiaDias,
-          );
-          setState(() {
-            _model.contador = _model.contador! + 1;
-          });
-        }
+        await SQLiteManager.instance.insertPessoa(
+          nome: '3232',
+          nomefantasia: '3',
+          email: '3',
+          dtcadastro: '323',
+          logradouro: 'ewew',
+          numero: '2',
+          complemento: 'eqweqw',
+          bairro: '3232',
+          cep: '3232',
+          tipopessoa: '1',
+          documento: '2',
+          dtsinc: '3',
+          bloqueiacredito: '1',
+          bloqueiadias: '1',
+        );
       }
     });
 
